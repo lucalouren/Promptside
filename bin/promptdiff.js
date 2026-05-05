@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import "dotenv/config";
 import { main } from "../dist/cli.js";
 
 main().catch((err) => {
