@@ -2,7 +2,7 @@
 models:
   - anthropic:claude-opus-4-7
   - openai:gpt-5
-  - google:gemini-2.5-pro
+  - google:gemini-2.5-flash
 temperature: 0.2
 max_tokens: 512
 ---

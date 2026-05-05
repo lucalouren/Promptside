@@ -2,7 +2,7 @@
 models:
   - anthropic:claude-opus-4-7
   - openai:gpt-5
-  - google:gemini-2.5-pro
+  - google:gemini-2.5-flash
 max_tokens: 600
 system: |
   You are a senior staff engineer reviewing code submitted by a junior

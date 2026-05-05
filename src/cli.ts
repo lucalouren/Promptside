@@ -24,7 +24,7 @@ const VERSION = "0.1.0-alpha.0";
 const DEFAULT_MODELS = [
   "anthropic:claude-opus-4-7",
   "openai:gpt-5",
-  "google:gemini-2.5-pro",
+  "google:gemini-2.5-flash",
 ];
 const DEFAULT_MODELS_STRING = DEFAULT_MODELS.join(",");
 

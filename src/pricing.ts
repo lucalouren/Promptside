@@ -54,6 +54,15 @@ const PRICING: PricingEntry[] = [
     contextWindow: 1_000_000,
     maxOutputTokens: 65_536,
   },
+  {
+    // Free-tier eligible — the v0.1 default Google model. Audio input is
+    // priced at $1.00/MTok but v0.1 is text-only, so we record the text rate.
+    provider: "google",
+    model: "gemini-2.5-flash",
+    inputPer1M: 0.3,
+    outputPer1M: 2.5,
+    contextWindow: 1_000_000,
+  },
 ];
 
 export const PRICING_SNAPSHOT_DATE = "2026-05-05";

@@ -6,7 +6,7 @@
 
 ```bash
 npx promptdiff "Explain transformers to a 10-year-old" \
-  --models claude-opus-4-7,gpt-5,gemini-2.5-pro
+  --models claude-opus-4-7,gpt-5,gemini-2.5-flash
 ```
 
 Outputs a side-by-side terminal view and a self-contained HTML report you can share.
@@ -37,7 +37,7 @@ npx promptdiff
 
 ```bash
 promptdiff "Write a haiku about debugging" \
-  --models claude-opus-4-7,gpt-5,gemini-2.5-pro
+  --models claude-opus-4-7,gpt-5,gemini-2.5-flash
 ```
 
 ### From a prompt file
@@ -49,7 +49,7 @@ Create `myprompt.prompt.md`:
 models:
   - claude-opus-4-7
   - gpt-5
-  - gemini-2.5-pro
+  - gemini-2.5-flash
 temperature: 0.7
 max_tokens: 500
 ---
