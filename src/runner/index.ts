@@ -1,7 +1,21 @@
-import type { RunResult, RunnerOptions } from "../types/index.js";
+import { getAdapter } from "../adapters/index.js";
+import type { ModelAdapter, RunResult, RunnerOptions } from "../types/index.js";
 
 export class Runner {
-  async run(_options: RunnerOptions): Promise<RunResult[]> {
-    throw new Error("Runner.run not implemented (Step 2)");
+  private readonly adapterFactory: (provider: string) => ModelAdapter;
+
+  constructor(adapterFactory?: (provider: string) => ModelAdapter) {
+    this.adapterFactory =
+      adapterFactory ?? ((p) => getAdapter(p as "anthropic" | "openai" | "google"));
+  }
+
+  async run(options: RunnerOptions): Promise<RunResult[]> {
+    const { prompt, models, signal } = options;
+    return Promise.all(
+      models.map((spec) => {
+        const adapter = this.adapterFactory(spec.provider);
+        return adapter.run({ prompt, spec, signal });
+      }),
+    );
   }
 }
