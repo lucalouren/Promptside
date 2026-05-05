@@ -15,6 +15,7 @@ export interface OpenAIClientLike {
       max_output_tokens?: number;
       temperature?: number;
       top_p?: number;
+      instructions?: string;
     }): Promise<{
       output_text?: string;
       output?: Array<{
@@ -39,7 +40,7 @@ export class OpenAIAdapter implements ModelAdapter {
   }
 
   async run(args: AdapterRunArgs): Promise<RunResult> {
-    const { prompt, spec } = args;
+    const { prompt, spec, system } = args;
     const start = performance.now();
 
     // GPT-5 (and other reasoning-class models) only accept the default
@@ -53,6 +54,7 @@ export class OpenAIAdapter implements ModelAdapter {
         max_output_tokens: spec.maxTokens ?? 1024,
         ...(acceptsTemperature && spec.temperature !== undefined && { temperature: spec.temperature }),
         ...(spec.topP !== undefined && { top_p: spec.topP }),
+        ...(system && { instructions: system }),
       });
 
       const latencyMs = Math.round(performance.now() - start);

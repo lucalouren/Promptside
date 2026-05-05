@@ -16,6 +16,7 @@ export interface GoogleClientLike {
         temperature?: number;
         topP?: number;
         maxOutputTokens?: number;
+        systemInstruction?: string;
       };
     }): Promise<{
       text?: string;
@@ -43,7 +44,7 @@ export class GoogleAdapter implements ModelAdapter {
   }
 
   async run(args: AdapterRunArgs): Promise<RunResult> {
-    const { prompt, spec } = args;
+    const { prompt, spec, system } = args;
     const start = performance.now();
 
     try {
@@ -52,6 +53,7 @@ export class GoogleAdapter implements ModelAdapter {
       };
       if (spec.temperature !== undefined) config.temperature = spec.temperature;
       if (spec.topP !== undefined) config.topP = spec.topP;
+      if (system) config.systemInstruction = system;
 
       const response = await this.client.models.generateContent({
         model: spec.model,

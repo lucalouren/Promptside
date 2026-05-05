@@ -14,6 +14,7 @@ export interface AnthropicClientLike {
       max_tokens: number;
       temperature?: number;
       top_p?: number;
+      system?: string;
       messages: Array<{ role: "user"; content: string }>;
     }): Promise<{
       content: Array<{ type: string; text?: string }>;
@@ -35,7 +36,7 @@ export class AnthropicAdapter implements ModelAdapter {
   }
 
   async run(args: AdapterRunArgs): Promise<RunResult> {
-    const { prompt, spec } = args;
+    const { prompt, spec, system } = args;
     const start = performance.now();
 
     // Opus 4.7 rejects `temperature`. v0.1 ships only with that default;
@@ -48,6 +49,7 @@ export class AnthropicAdapter implements ModelAdapter {
         max_tokens: spec.maxTokens ?? 1024,
         ...(acceptsTemperature && spec.temperature !== undefined && { temperature: spec.temperature }),
         ...(spec.topP !== undefined && { top_p: spec.topP }),
+        ...(system && { system }),
         messages: [{ role: "user", content: prompt }],
       });
 

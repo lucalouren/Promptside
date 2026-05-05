@@ -10,11 +10,11 @@ export class Runner {
   }
 
   async run(options: RunnerOptions): Promise<RunResult[]> {
-    const { prompt, models, signal } = options;
+    const { prompt, models, system, signal } = options;
     return Promise.all(
       models.map((spec) => {
         const adapter = this.adapterFactory(spec.provider);
-        return adapter.run({ prompt, spec, signal });
+        return adapter.run({ prompt, spec, system, signal });
       }),
     );
   }

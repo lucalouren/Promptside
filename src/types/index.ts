@@ -25,6 +25,7 @@ export interface RunResult {
 export interface AdapterRunArgs {
   prompt: string;
   spec: ModelSpec;
+  system?: string;
   signal?: AbortSignal;
 }
 
@@ -36,6 +37,7 @@ export interface ModelAdapter {
 export interface RunnerOptions {
   prompt: string;
   models: ModelSpec[];
+  system?: string;
   concurrency?: number;
   signal?: AbortSignal;
 }
