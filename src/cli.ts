@@ -1,5 +1,8 @@
+import { writeFile } from "node:fs/promises";
 import { Command, Option } from "commander";
 import { parseModelString } from "./adapters/index.js";
+import { Runner } from "./runner/index.js";
+import { getRenderer } from "./renderers/index.js";
 import type { ModelSpec, RendererTarget } from "./types/index.js";
 
 export interface CliInvocation {
@@ -86,24 +89,31 @@ export function parseInvocation(
 }
 
 async function runOnce(invocation: CliInvocation): Promise<void> {
-  // Step 1 scaffold: surface what was parsed so users know the wiring works.
-  // The Runner + renderers land in Step 2 and Step 3.
-  const summary = {
-    promptPreview: invocation.promptFile ?? truncate(invocation.prompt, 80),
-    models: invocation.models.map((m) => `${m.provider}:${m.model}`),
-    renderer: invocation.renderer,
-    output: invocation.output ?? "(stdout)",
-    watch: invocation.watch,
-  };
-  process.stdout.write(
-    `promptdiff scaffold ready — implementation lands in Step 2.\n` +
-      JSON.stringify(summary, null, 2) +
-      "\n",
-  );
-}
+  if (invocation.promptFile) {
+    throw new Error(
+      ".prompt.md file support is not implemented yet — pass an inline prompt for now.",
+    );
+  }
 
-function truncate(value: string, max: number): string {
-  return value.length > max ? `${value.slice(0, max - 1)}…` : value;
+  const runner = new Runner();
+  const results = await runner.run({
+    prompt: invocation.prompt,
+    models: invocation.models,
+  });
+
+  const renderer = getRenderer(invocation.renderer);
+  const rendered = await renderer.render({
+    prompt: invocation.prompt,
+    results,
+    generatedAt: new Date(),
+  });
+
+  if (invocation.output) {
+    await writeFile(invocation.output, rendered, "utf8");
+    process.stdout.write(`wrote ${invocation.output}\n`);
+  } else {
+    process.stdout.write(rendered + "\n");
+  }
 }
 
 export async function main(argv: string[] = process.argv): Promise<void> {
