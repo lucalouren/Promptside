@@ -42,7 +42,8 @@
     "commander": "^12.1.0",
     "diff": "^5.2.0",
     "dotenv": "^17.4.2",
-    "gray-matter": "^4.0.3"
+    "gray-matter": "^4.0.3",
+    "openai": "^6.36.0"
   },
   "devDependencies": {
     "@types/diff": "^5.2.1",
