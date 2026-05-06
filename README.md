@@ -42,32 +42,24 @@ promptdiff "Write a haiku about debugging" \
 
 ### From a prompt file
 
-Create `myprompt.prompt.md`:
+Create a `.prompt.md` file (see `examples/` for more):
 
 ````markdown
 ---
 models:
-  - claude-opus-4-7
-  - gpt-5
-  - gemini-2.5-flash
-temperature: 0.7
-max_tokens: 500
+  - anthropic:claude-opus-4-7
+  - openai:gpt-5
+  - google:gemini-2.5-flash
+max_tokens: 64
 ---
 
-You are a senior code reviewer. Review this function for bugs, style, and performance:
-
-```js
-function fibonacci(n) {
-  if (n < 2) return n;
-  return fibonacci(n-1) + fibonacci(n-2);
-}
-```
+Write a haiku about debugging.
 ````
 
 Then:
 
 ```bash
-promptdiff run myprompt.prompt.md
+promptdiff run examples/demo-haiku.prompt.md
 ```
 
 ### Watch mode
