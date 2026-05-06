@@ -1,0 +1,45 @@
+[
+  {
+    "spec": {
+      "provider": "anthropic",
+      "model": "claude-opus-4-7",
+      "maxTokens": 1024
+    },
+    "output": "# Code Review: Fibonacci Function\n\n```javascript\nfunction fib(n){return n<2?n:fib(n-1)+fib(n-2)}\n```\n\n## Bugs & Issues\n\n### 1. **No input validation**\n- Negative numbers cause infinite recursion... wait, actually `n < 2` returns `n` for negatives, so `fib(-5)` returns `-5` (incorrect, but doesn't crash).\n- Non-integer inputs (e.g., `fib(2.5)`) lead to incorrect results and excessive recursion.\n- Non-number inputs (e.g., `fib(\"foo\")`) produce `NaN`.\n\n### 2. **Exponential time complexity — O(2ⁿ)**\nThe function recomputes the same values repeatedly. `fib(40)` is already slow; `fib(50)` is painful.\n\n### 3. **Stack overflow risk**\nLarge `n` will exceed the call stack limit (typically around `n ≈ 10,000+`, but slowness hits long before that).\n\n### 4. **Precision loss for large n**\nJavaScript numbers lose integer precision beyond `Number.MAX_SAFE_INTEGER` (2⁵³ − 1), which `fib(79)` exceeds.\n\n---\n\n## Improved Versions\n\n### ✅ Iterative (best general-purpose solution)\n```javascript\nfunction fib(n) {\n  if (!Number.isInteger(n) || n < 0) {\n    throw new RangeError('n must be a non-negative integer');\n  }\n  let a = 0, b = 1;\n  for (let i = 0; i < n; i++) {\n    [a, b] = [b, a + b];\n  }\n  return a;\n}\n```\n- **O(n)** time, **O(1)** space\n- No recursion → no stack overflow\n- Validates input\n\n### ✅ Memoized recursion (preserves recursive style)\n```javascript\nconst fib = (() => {\n  const cache = new Map([[0, 0n], [1, 1n]]);\n  return function fib(n) {\n    if (!Number.isInteger(n) || n < 0) {\n      throw new RangeError('n must be a non-negative integer');\n    }\n    if (cache.has(n)) return cache.get(n);\n    const result = fib(n - 1) + fib(n - 2);\n    cache.set(n, result);\n    return result;\n  };\n})();\n```\n\n### ✅ BigInt version (for large n without precision loss)\n```javascript\nfunction fib(n) {\n  if (!Number.isInteger(n) || n < 0) {\n    throw new RangeError('n must be a non-negative integer');\n  }\n  let a = 0n, b = 1n;\n  for (let i = 0; i < n; i++) {\n    [a, b] = [b, a + b];\n  }\n  return a;\n}\n// fib(100) → 354224848179261915075n  ✔ exact\n```\n\n---\n\n## Summary\n\n| Issue | Fix |\n|---|---|\n| Exponential complexity | Use iteration or memoization |\n| Stack overflow | Avoid deep recursion |\n| No validation | Check for non-negative integers |\n| Precision lo",
+    "usage": {
+      "inputTokens": 61,
+      "outputTokens": 1024
+    },
+    "latencyMs": 13931,
+    "costUsd": 0.025905
+  },
+  {
+    "spec": {
+      "provider": "openai",
+      "model": "gpt-5",
+      "maxTokens": 1024
+    },
+    "output": "",
+    "usage": {
+      "inputTokens": 37,
+      "outputTokens": 1024
+    },
+    "latencyMs": 15274,
+    "costUsd": 0.01028625
+  },
+  {
+    "spec": {
+      "provider": "google",
+      "model": "gemini-2.5-flash",
+      "maxTokens": 1024,
+      "temperature": 0.7
+    },
+    "output": "This JavaScript function correctly implements the mathematical definition of the Fibonacci sequence using recursion. However, it has significant performance issues and some edge case limitations.\n\nLet's break it down:\n\n##",
+    "usage": {
+      "inputTokens": 35,
+      "outputTokens": 38
+    },
+    "latencyMs": 7848,
+    "costUsd": 0.0001055
+  }
+]

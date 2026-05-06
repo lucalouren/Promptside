@@ -1,0 +1,45 @@
+[
+  {
+    "spec": {
+      "provider": "anthropic",
+      "model": "claude-opus-4-7",
+      "maxTokens": 1024
+    },
+    "output": "Silent cursor blinks—\nthe bug was a missing comma\nall along. Of course.",
+    "usage": {
+      "inputTokens": 21,
+      "outputTokens": 32
+    },
+    "latencyMs": 2409,
+    "costUsd": 0.000905
+  },
+  {
+    "spec": {
+      "provider": "openai",
+      "model": "gpt-5",
+      "maxTokens": 1024
+    },
+    "output": "Midnight screen light hums,\nPhantoms in the call stack hide—\nOne print lights the path.",
+    "usage": {
+      "inputTokens": 12,
+      "outputTokens": 576
+    },
+    "latencyMs": 11256,
+    "costUsd": 0.005775000000000001
+  },
+  {
+    "spec": {
+      "provider": "google",
+      "model": "gemini-2.5-flash",
+      "maxTokens": 1024,
+      "temperature": 0.7
+    },
+    "output": "Code does not run,\nTracing lines, a hidden flaw,\nFound it, peace returns.",
+    "usage": {
+      "inputTokens": 7,
+      "outputTokens": 20
+    },
+    "latencyMs": 4461,
+    "costUsd": 0.000052100000000000006
+  }
+]
