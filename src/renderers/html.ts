@@ -1,4 +1,4 @@
-import { diffWords } from "diff";
+import { diffWordsWithSpace } from "diff";
 import type { RenderInput, Renderer, RunResult } from "../types/index.js";
 
 export class HtmlRenderer implements Renderer {
@@ -87,14 +87,19 @@ function renderPanel(result: RunResult, baseline: RunResult | undefined): string
 }
 
 function renderDiff(base: string, target: string): string {
-  const changes = diffWords(base, target);
+  const changes = diffWordsWithSpace(base, target);
   const parts: string[] = [];
-  for (const ch of changes) {
+  for (let i = 0; i < changes.length; i++) {
+    const ch = changes[i]!;
     const text = esc(ch.value);
-    if (ch.added) {
-      parts.push(`<span class="diff-ins">${text}</span>`);
-    } else if (ch.removed) {
+    if (ch.removed) {
       parts.push(`<span class="diff-del">${text}</span>`);
+      const next = changes[i + 1];
+      if (next?.added) {
+        parts.push(" ");
+      }
+    } else if (ch.added) {
+      parts.push(`<span class="diff-ins">${text}</span>`);
     } else {
       parts.push(text);
     }
