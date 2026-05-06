@@ -32,6 +32,7 @@ interface RawCliOptions {
   models: string;
   renderer: RendererTarget;
   output?: string;
+  html?: string;
   watch: boolean;
 }
 
@@ -57,6 +58,7 @@ export function buildProgram(): Command {
           .default("terminal"),
       )
       .option("-o, --output <path>", "Write rendered output to a file")
+      .option("--html <path>", "Write a self-contained HTML report to the given path")
       .option("-w, --watch", "Re-run when the prompt file changes", false);
 
   // Default command: inline prompt OR auto-detected .prompt.md path.
@@ -98,6 +100,11 @@ export async function parseInvocation(
 
   const isFile = promptArg.endsWith(".prompt.md") || promptArg.endsWith(".md");
   const modelsOverridden = opts.models !== DEFAULT_MODELS_STRING;
+
+  if (opts.html) {
+    opts.renderer = "html" as RendererTarget;
+    opts.output = opts.html;
+  }
 
   if (isFile) {
     const file = await loadPromptFile(promptArg);
