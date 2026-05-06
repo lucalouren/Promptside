@@ -1,4 +1,4 @@
-import { diffChars } from "diff";
+import { diffWords } from "diff";
 import type { RenderInput, Renderer, RunResult } from "../types/index.js";
 
 export class HtmlRenderer implements Renderer {
@@ -61,7 +61,7 @@ function renderPanel(result: RunResult, baseline: RunResult | undefined): string
 
   let bodyHtml: string;
   if (isError) {
-    bodyHtml = `<div class="output-error">${esc(error!.message)}</div>`;
+    bodyHtml = `<div class="output-error"><span class="error-pill">ERROR</span>${esc(error!.message)}</div>`;
   } else if (isEmpty) {
     bodyHtml = `<div class="output-empty">(no output — model used all tokens on reasoning)</div>`;
   } else if (isBaseline || !baseline) {
@@ -87,7 +87,7 @@ function renderPanel(result: RunResult, baseline: RunResult | undefined): string
 }
 
 function renderDiff(base: string, target: string): string {
-  const changes = diffChars(base, target);
+  const changes = diffWords(base, target);
   const parts: string[] = [];
   for (const ch of changes) {
     const text = esc(ch.value);
@@ -335,6 +335,23 @@ body {
   justify-content: center;
   min-height: 80px;
   text-align: center;
+}
+
+.panel-error { border-color: var(--error-text); }
+
+.error-pill {
+  display: inline-block;
+  font-family: ui-monospace, "SF Mono", Menlo, "Cascadia Code", Consolas, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--bg);
+  background: var(--error-text);
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
 .output-error {
