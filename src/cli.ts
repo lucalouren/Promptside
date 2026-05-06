@@ -65,8 +65,8 @@ export function buildProgram(): Command {
   sharedOptions(
     program
       .argument("[prompt]", "Inline prompt string, or path to a .prompt.md file")
-      .action(async (promptArg: string | undefined, opts: RawCliOptions) => {
-        const invocation = await parseInvocation(promptArg, opts);
+      .action(async (promptArg: string | undefined, _opts: RawCliOptions, cmd: Command) => {
+        const invocation = await parseInvocation(promptArg, cmd.optsWithGlobals() as RawCliOptions);
         await runOnce(invocation);
       }),
   );
@@ -76,8 +76,8 @@ export function buildProgram(): Command {
     program
       .command("run <file>")
       .description("Run a .prompt.md file (frontmatter + body)")
-      .action(async (file: string, opts: RawCliOptions) => {
-        const invocation = await parseInvocation(file, opts);
+      .action(async (file: string, _opts: RawCliOptions, cmd: Command) => {
+        const invocation = await parseInvocation(file, cmd.optsWithGlobals() as RawCliOptions);
         if (!invocation.promptFile) {
           throw new Error(`"${file}" is not a .prompt.md file.`);
         }
