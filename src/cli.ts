@@ -1,5 +1,7 @@
 import { writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { Command, Option } from "commander";
+import chokidar from "chokidar";
 import { parseModelString } from "./adapters/index.js";
 import { Runner } from "./runner/index.js";
 import { getRenderer } from "./renderers/index.js";
@@ -77,11 +79,15 @@ export function buildProgram(): Command {
       .command("run <file>")
       .description("Run a .prompt.md file (frontmatter + body)")
       .action(async (file: string, _opts: RawCliOptions, cmd: Command) => {
-        const invocation = await parseInvocation(file, cmd.optsWithGlobals() as RawCliOptions);
+        const opts = cmd.optsWithGlobals() as RawCliOptions;
+        const invocation = await parseInvocation(file, opts);
         if (!invocation.promptFile) {
           throw new Error(`"${file}" is not a .prompt.md file.`);
         }
         await runOnce(invocation);
+        if (invocation.watch) {
+          await runWatch(invocation.promptFile, opts);
+        }
       }),
   );
 
@@ -164,6 +170,50 @@ async function runOnce(invocation: CliInvocation): Promise<void> {
   } else {
     process.stdout.write(rendered + "\n");
   }
+}
+
+async function runWatch(filePath: string, opts: RawCliOptions): Promise<void> {
+  const absPath = resolve(filePath);
+  process.stdout.write(`\nwatching ${filePath} · press Ctrl+C to stop\n`);
+
+  const watcher = chokidar.watch(absPath, {
+    awaitWriteFinish: { stabilityThreshold: 300, pollInterval: 100 },
+  });
+
+  let running = false;
+
+  const onFileChange = async () => {
+    if (running) return;
+    running = true;
+    try {
+      console.clear();
+      const ts = new Date().toLocaleTimeString();
+      process.stdout.write(`↻ re-running… ${ts}\n\n`);
+      const invocation = await parseInvocation(filePath, { ...opts });
+      await runOnce(invocation);
+      process.stdout.write(`\n${"─".repeat(60)}\nwatching ${filePath} · press Ctrl+C to stop\n`);
+    } catch (err) {
+      process.stderr.write(`\nerror: ${err instanceof Error ? err.message : err}\n`);
+      process.stdout.write(`\nwatching ${filePath} · press Ctrl+C to stop\n`);
+    } finally {
+      running = false;
+    }
+  };
+
+  watcher.on("change", onFileChange);
+  watcher.on("unlink", () => {
+    process.stdout.write("\nfile removed, exiting watch\n");
+    watcher.close();
+    process.exit(0);
+  });
+
+  process.on("SIGINT", () => {
+    process.stdout.write("\nwatch stopped\n");
+    watcher.close();
+    process.exit(0);
+  });
+
+  return new Promise(() => {});
 }
 
 export async function main(argv: string[] = process.argv): Promise<void> {
