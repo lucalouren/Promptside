@@ -1,17 +1,19 @@
 {
   "name": "promptdiff",
-  "version": "0.1.0-alpha.0",
-  "description": "Run the same prompt across multiple LLMs and diff the results, side-by-side.",
+  "version": "0.1.0",
+  "description": "Run the same prompt across LLMs and see a side-by-side diff with tokens, latency, and cost",
   "license": "MIT",
+  "author": "lucalouren",
   "type": "module",
   "bin": {
-    "promptdiff": "./bin/promptdiff.js"
+    "promptdiff": "bin/promptdiff.js"
   },
   "files": [
     "dist",
     "bin",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "examples"
   ],
   "scripts": {
     "build": "tsc",
@@ -23,16 +25,27 @@
   "engines": {
     "node": ">=18"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucalouren/promptdiff.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lucalouren/promptdiff/issues"
+  },
+  "homepage": "https://github.com/lucalouren/promptdiff#readme",
   "keywords": [
     "llm",
+    "ai",
     "prompt",
-    "diff",
-    "openai",
-    "anthropic",
     "claude",
+    "gpt",
     "gemini",
-    "evaluation",
-    "cli"
+    "diff",
+    "compare",
+    "cli",
+    "anthropic",
+    "openai",
+    "google"
   ],
   "dependencies": {
     "@anthropic-ai/sdk": "^0.93.0",
