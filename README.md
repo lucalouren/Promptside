@@ -1,17 +1,17 @@
-# promptdiff
+# llmdiff
 
 > See how your prompt performs across LLMs — side by side, in seconds.
 
-`promptdiff` runs the same prompt across multiple language models and shows you a beautiful side-by-side comparison of outputs, token usage, latency, and cost. Built for the workflow every AI dev now has: *"a new model dropped — did my prompts regress?"*
+`llmdiff` runs the same prompt across multiple language models and shows you a beautiful side-by-side comparison of outputs, token usage, latency, and cost. Built for the workflow every AI dev now has: *"a new model dropped — did my prompts regress?"*
 
 ```bash
-npx promptdiff "Explain transformers to a 10-year-old" \
+npx llmdiff "Explain transformers to a 10-year-old" \
   --models claude-opus-4-7,gpt-5,gemini-2.5-flash
 ```
 
 Outputs a side-by-side terminal view and a self-contained HTML report you can share.
 
-![promptdiff demo](./assets/demo.gif)
+![llmdiff demo](./assets/demo.gif)
 
 ## Why
 
@@ -21,14 +21,14 @@ Every time a new frontier model ships, you want to know:
 - Which model gives the best answer for *my* use case?
 - What's the cost/latency tradeoff?
 
-Existing tools (Promptfoo, Braintrust, etc.) are powerful but heavy — config files, eval frameworks, dashboards, signups. `promptdiff` is the opposite: one command, no signup, instant visual diff.
+Existing tools (Promptfoo, Braintrust, etc.) are powerful but heavy — config files, eval frameworks, dashboards, signups. `llmdiff` is the opposite: one command, no signup, instant visual diff.
 
 ## Install
 
 ```bash
-npm install -g promptdiff
+npm install -g llmdiff
 # or run directly
-npx promptdiff
+npx llmdiff
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ npx promptdiff
 ### Quick comparison
 
 ```bash
-promptdiff "Write a haiku about debugging" \
+llmdiff "Write a haiku about debugging" \
   --models claude-opus-4-7,gpt-5,gemini-2.5-flash
 ```
 
@@ -59,7 +59,7 @@ Write a haiku about debugging.
 Then:
 
 ```bash
-promptdiff run examples/demo-haiku.prompt.md
+llmdiff run examples/demo-haiku.prompt.md
 ```
 
 ### Watch mode
@@ -67,13 +67,13 @@ promptdiff run examples/demo-haiku.prompt.md
 Re-run automatically on file save:
 
 ```bash
-promptdiff run myprompt.prompt.md --watch
+llmdiff run myprompt.prompt.md --watch
 ```
 
 ### HTML report
 
 ```bash
-promptdiff "your prompt" --models claude-opus-4-7,gpt-5 --html report.html
+llmdiff "your prompt" --models claude-opus-4-7,gpt-5 --html report.html
 open report.html
 ```
 
@@ -87,7 +87,7 @@ export OPENAI_API_KEY=...
 export GOOGLE_API_KEY=...
 ```
 
-`promptdiff` only calls the providers you actually use.
+`llmdiff` only calls the providers you actually use.
 
 ## Output
 
@@ -101,7 +101,7 @@ Each run captures, per model:
 
 ## Comparison
 
-| | promptdiff | Promptfoo | Braintrust |
+| | llmdiff | Promptfoo | Braintrust |
 |---|---|---|---|
 | Setup time | 30 seconds | ~10 min | Signup required |
 | Config | Optional `.prompt.md` | YAML eval files | Cloud dashboard |
@@ -110,7 +110,7 @@ Each run captures, per model:
 | Eval framework | ❌ (by design) | ✅ | ✅ |
 | Best for | Quick prompt comparisons | Full eval pipelines | Team prompt management |
 
-`promptdiff` is the tool you reach for when a model drops and you want to know in 30 seconds whether your prompts still work. For full eval pipelines, use Promptfoo. For team workflows, use Braintrust.
+`llmdiff` is the tool you reach for when a model drops and you want to know in 30 seconds whether your prompts still work. For full eval pipelines, use Promptfoo. For team workflows, use Braintrust.
 
 ## Roadmap
 
@@ -133,4 +133,4 @@ MIT
 
 ---
 
-Built by [@lucalouren](https://github.com/lucalouren). If `promptdiff` saves you time, a star helps a lot. ⭐
+Built by [@lucalouren](https://github.com/lucalouren). If `llmdiff` saves you time, a star helps a lot. ⭐

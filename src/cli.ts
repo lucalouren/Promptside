@@ -41,7 +41,7 @@ interface RawCliOptions {
 export function buildProgram(): Command {
   const program = new Command();
   program
-    .name("promptdiff")
+    .name("llmdiff")
     .description(
       "Run the same prompt across multiple LLMs and diff the results, side-by-side.",
     )
@@ -73,7 +73,7 @@ export function buildProgram(): Command {
       }),
   );
 
-  // Explicit subcommand: promptdiff run <file.prompt.md>
+  // Explicit subcommand: llmdiff run <file.prompt.md>
   sharedOptions(
     program
       .command("run <file>")

@@ -4,6 +4,6 @@ dotenv.config({ override: true });
 import { main } from "../dist/cli.js";
 
 main().catch((err) => {
-  process.stderr.write(`promptdiff: ${err?.message ?? err}\n`);
+  process.stderr.write(`llmdiff: ${err?.message ?? err}\n`);
   process.exit(1);
 });
