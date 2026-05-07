@@ -8,3 +8,8 @@ dist/
 .vscode/
 coverage/
 *.tsbuildinfo
+.claude/
+launch-drafts.md
+launch-todo.md
+CLAUDE_CODE_HANDOFF.md
+COWORK_CONTEXT.md

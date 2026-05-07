@@ -78,6 +78,12 @@ function renderSideBySide(results: RunResult[]): string {
         colWidth,
       );
     }
+    if (r.output.length === 0) {
+      return wrapToWidth(
+        chalk.dim("(no output — model used all tokens on reasoning)"),
+        colWidth,
+      );
+    }
     return wrapToWidth(r.output, colWidth);
   });
 

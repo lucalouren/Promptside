@@ -3,7 +3,7 @@ models:
   - anthropic:claude-opus-4-7
   - openai:gpt-5
   - google:gemini-2.5-flash
-max_tokens: 600
+max_tokens: 2048
 system: |
   You are a senior staff engineer reviewing code submitted by a junior
   developer. Be direct but kind. Call out real bugs first, then style

@@ -89,6 +89,8 @@ export GOOGLE_API_KEY=...
 
 `promptside` only calls the providers you actually use.
 
+> **Note:** Gemini's free tier has aggressive rate limits and may return 503/429 errors during peak demand. If you hit this, wait a few minutes or switch to a paid API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
+
 ## Output
 
 Each run captures, per model:

@@ -2,7 +2,7 @@ import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Command, Option } from "commander";
 import chokidar from "chokidar";
-import { parseModelString } from "./adapters/index.js";
+import { parseModelString, validateEnv } from "./adapters/index.js";
 import { Runner } from "./runner/index.js";
 import { getRenderer } from "./renderers/index.js";
 import { loadPromptFile } from "./promptFile.js";
@@ -21,7 +21,7 @@ export interface CliInvocation {
   modelsOverridden: boolean;
 }
 
-const VERSION = "0.1.0-alpha.0";
+const VERSION = "0.1.1";
 
 const DEFAULT_MODELS = [
   "anthropic:claude-opus-4-7",
@@ -150,6 +150,7 @@ export async function parseInvocation(
 }
 
 async function runOnce(invocation: CliInvocation): Promise<void> {
+  validateEnv(invocation.models);
   const runner = new Runner();
   const results = await runner.run({
     prompt: invocation.prompt,

@@ -16,6 +16,7 @@ export interface OpenAIClientLike {
       temperature?: number;
       top_p?: number;
       instructions?: string;
+      reasoning?: { effort?: "minimal" | "low" | "medium" | "high" };
     }): Promise<{
       output_text?: string;
       output?: Array<{
@@ -45,7 +46,8 @@ export class OpenAIAdapter implements ModelAdapter {
 
     // GPT-5 (and other reasoning-class models) only accept the default
     // temperature; passing a non-default value 400s. We omit it for v0.1.
-    const acceptsTemperature = !/^gpt-5/.test(spec.model) && !/^o\d/.test(spec.model);
+    const isReasoningModel = /^gpt-5/.test(spec.model) || /^o\d/.test(spec.model);
+    const acceptsTemperature = !isReasoningModel;
 
     try {
       const response = await this.client.responses.create({
@@ -55,6 +57,11 @@ export class OpenAIAdapter implements ModelAdapter {
         ...(acceptsTemperature && spec.temperature !== undefined && { temperature: spec.temperature }),
         ...(spec.topP !== undefined && { top_p: spec.topP }),
         ...(system && { instructions: system }),
+        // Reasoning models default to effort="medium" which burns through
+        // the entire max_output_tokens budget on internal reasoning,
+        // leaving no room for the actual response. "low" gives us visible
+        // output without huge token budgets.
+        ...(isReasoningModel && { reasoning: { effort: "low" as const } }),
       });
 
       const latencyMs = Math.round(performance.now() - start);
