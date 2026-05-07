@@ -28,7 +28,7 @@ launch first; we revisit after Saturday.
   inputs.
 - Per-model overrides inside frontmatter (`models: [{ model: "...",
   temperature: 0 }, ...]`).
-- A small `llmdiff init` that scaffolds an example file.
+- A small `promptside init` that scaffolds an example file.
 
 ## CI / regression mode
 

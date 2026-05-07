@@ -16,7 +16,7 @@ export class TerminalRenderer implements Renderer {
     const lines: string[] = [];
 
     lines.push(chalk.dim("─".repeat(termWidth())));
-    lines.push(`${chalk.bold("llmdiff")} ${chalk.dim("· " + generatedAt.toISOString())}`);
+    lines.push(`${chalk.bold("promptside")} ${chalk.dim("· " + generatedAt.toISOString())}`);
     lines.push("");
     lines.push(chalk.dim("PROMPT"));
     lines.push(indent(truncate(prompt, 600), "  "));

@@ -1,12 +1,12 @@
 {
-  "name": "llmdiff",
+  "name": "promptside",
   "version": "0.1.0",
   "description": "Run the same prompt across LLMs and see a side-by-side diff with tokens, latency, and cost",
   "license": "MIT",
   "author": "lucalouren",
   "type": "module",
   "bin": {
-    "llmdiff": "bin/llmdiff.js"
+    "promptside": "bin/promptside.js"
   },
   "files": [
     "dist",
@@ -18,7 +18,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "start": "node bin/llmdiff.js",
+    "start": "node bin/promptside.js",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
@@ -27,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lucalouren/llmdiff.git"
+    "url": "git+https://github.com/lucalouren/promptside.git"
   },
   "bugs": {
-    "url": "https://github.com/lucalouren/llmdiff/issues"
+    "url": "https://github.com/lucalouren/promptside/issues"
   },
-  "homepage": "https://github.com/lucalouren/llmdiff#readme",
+  "homepage": "https://github.com/lucalouren/promptside#readme",
   "keywords": [
     "llm",
     "ai",
