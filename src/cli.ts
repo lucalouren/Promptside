@@ -6,6 +6,7 @@ import { parseModelString, validateEnv } from "./adapters/index.js";
 import { Runner } from "./runner/index.js";
 import { getRenderer } from "./renderers/index.js";
 import { loadPromptFile } from "./promptFile.js";
+import { startRepl } from "./repl.js";
 import type { ModelSpec, RendererTarget } from "./types/index.js";
 
 export interface CliInvocation {
@@ -21,7 +22,7 @@ export interface CliInvocation {
   modelsOverridden: boolean;
 }
 
-const VERSION = "0.1.1";
+const VERSION = "0.2.0";
 
 const DEFAULT_MODELS = [
   "anthropic:claude-opus-4-7",
@@ -68,6 +69,18 @@ export function buildProgram(): Command {
     program
       .argument("[prompt]", "Inline prompt string, or path to a .prompt.md file")
       .action(async (promptArg: string | undefined, _opts: RawCliOptions, cmd: Command) => {
+        if (!promptArg) {
+          // No prompt — launch interactive REPL.
+          const opts = cmd.optsWithGlobals() as RawCliOptions;
+          const models = opts.models
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean)
+            .map(parseModelString);
+          validateEnv(models);
+          await startRepl(models);
+          return;
+        }
         const invocation = await parseInvocation(promptArg, cmd.optsWithGlobals() as RawCliOptions);
         await runOnce(invocation);
       }),

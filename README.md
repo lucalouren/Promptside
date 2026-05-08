@@ -1,39 +1,67 @@
 # promptside
 
-> See how your prompt performs across LLMs — side by side, in seconds.
+> Talk to every LLM at once. Side by side, in your terminal.
 
-`promptside` runs the same prompt across multiple language models and shows you a beautiful side-by-side comparison of outputs, token usage, latency, and cost. Built for the workflow every AI dev now has: *"a new model dropped — did my prompts regress?"*
+`promptside` is a multi-model chat playground for the terminal. Run the same prompt across Claude, GPT, Gemini, Grok, DeepSeek, and Kimi — or drop into an interactive REPL and have a multi-turn conversation with all of them simultaneously.
 
 ```bash
-npx promptside "Explain transformers to a 10-year-old" \
-  --models claude-opus-4-7,gpt-5,gemini-2.5-flash
+npx promptside
 ```
 
-Outputs a side-by-side terminal view and a self-contained HTML report you can share.
+No config. No dashboard. Just type and compare.
 
 ![promptside demo](./assets/demo.gif)
 
-## Why
+## Quick start
 
-Every time a new frontier model ships, you want to know:
+```bash
+# Interactive mode — chat with multiple models at once
+npx promptside
 
-- Does my prompt still work?
-- Which model gives the best answer for *my* use case?
-- What's the cost/latency tradeoff?
+# One-shot comparison
+npx promptside "Explain monads in one sentence" \
+  --models claude-sonnet-4-5,gpt-4.1,gemini-2.5-flash
 
-Existing tools (Promptfoo, Braintrust, etc.) are powerful but heavy — config files, eval frameworks, dashboards, signups. `promptside` is the opposite: one command, no signup, instant visual diff.
+# Use one API key for all models via OpenRouter
+export OPENROUTER_API_KEY=sk-or-...
+npx promptside
+```
 
 ## Install
 
 ```bash
 npm install -g promptside
-# or run directly
+# or run directly with npx (no install needed)
 npx promptside
 ```
 
+## Supported models
+
+| Provider | Models | Env var |
+|---|---|---|
+| Anthropic | `claude-opus-4-7`, `claude-sonnet-4-5`, `claude-haiku-3-5` | `ANTHROPIC_API_KEY` |
+| OpenAI | `gpt-5`, `gpt-4.1`, `gpt-4.1-mini`, `gpt-4.1-nano` | `OPENAI_API_KEY` |
+| Google | `gemini-2.5-pro`, `gemini-2.5-flash` | `GOOGLE_API_KEY` |
+| xAI | `grok-3`, `grok-3-mini` | `XAI_API_KEY` |
+| DeepSeek | `deepseek-r1`, `deepseek-v3` | `DEEPSEEK_API_KEY` |
+| Kimi | `kimi-k2` | `KIMI_API_KEY` |
+| **OpenRouter** | **All of the above with one key** | `OPENROUTER_API_KEY` |
+
 ## Usage
 
-### Quick comparison
+### Interactive mode (REPL)
+
+Just run `promptside` with no arguments:
+
+```bash
+promptside
+```
+
+Type prompts, see side-by-side results. Each model maintains its own conversation history — multi-turn works out of the box.
+
+Commands: `/models`, `/clear`, `/help`, `/quit`
+
+### One-shot comparison
 
 ```bash
 promptside "Write a haiku about debugging" \
@@ -50,7 +78,7 @@ models:
   - anthropic:claude-opus-4-7
   - openai:gpt-5
   - google:gemini-2.5-flash
-max_tokens: 64
+max_tokens: 1024
 ---
 
 Write a haiku about debugging.
@@ -79,7 +107,7 @@ open report.html
 
 ## API keys
 
-Set these in your environment:
+Set per-provider keys in your environment or a `.env` file:
 
 ```bash
 export ANTHROPIC_API_KEY=...
@@ -87,7 +115,13 @@ export OPENAI_API_KEY=...
 export GOOGLE_API_KEY=...
 ```
 
-`promptside` only calls the providers you actually use.
+Or use **one key for everything** with [OpenRouter](https://openrouter.ai):
+
+```bash
+export OPENROUTER_API_KEY=sk-or-...
+```
+
+`promptside` only calls the providers you actually use. If a direct provider key is set, it's used; otherwise it falls back to OpenRouter.
 
 > **Note:** Gemini's free tier has aggressive rate limits and may return 503/429 errors during peak demand. If you hit this, wait a few minutes or switch to a paid API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
 
@@ -99,29 +133,18 @@ Each run captures, per model:
 - Input / output tokens
 - Latency (ms)
 - Cost (USD)
-- Character-level diff against the other models' outputs
-
-## Comparison
-
-| | promptside | Promptfoo | Braintrust |
-|---|---|---|---|
-| Setup time | 30 seconds | ~10 min | Signup required |
-| Config | Optional `.prompt.md` | YAML eval files | Cloud dashboard |
-| Local-first | ✅ | ✅ | ❌ |
-| Visual diff | ✅ | ❌ | Partial |
-| Eval framework | ❌ (by design) | ✅ | ✅ |
-| Best for | Quick prompt comparisons | Full eval pipelines | Team prompt management |
-
-`promptside` is the tool you reach for when a model drops and you want to know in 30 seconds whether your prompts still work. For full eval pipelines, use Promptfoo. For team workflows, use Braintrust.
+- Word-level diff against the other models' outputs (HTML report)
 
 ## Roadmap
 
-- [x] Anthropic, OpenAI, Google adapters
+- [x] 6 providers: Anthropic, OpenAI, Google, xAI, DeepSeek, Kimi
+- [x] OpenRouter support (one key for all models)
+- [x] Interactive REPL with multi-turn conversation
 - [x] Terminal + HTML renderers
 - [x] `.prompt.md` files with frontmatter
 - [x] Watch mode
-- [ ] Local model support (Ollama)
 - [ ] Streaming output
+- [ ] Local model support (Ollama)
 - [ ] Variable substitution in prompt files
 - [ ] CI mode (exit code on regression)
 
@@ -135,4 +158,4 @@ MIT
 
 ---
 
-Built by [@lucalouren](https://github.com/lucalouren). If `promptside` saves you time, a star helps a lot. ⭐
+Built by [@lucalouren](https://github.com/lucalouren). If `promptside` saves you time, a star helps a lot.

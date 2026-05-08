@@ -6,6 +6,7 @@ import type {
   Usage,
 } from "../types/index.js";
 import { computeCostUsd } from "../pricing.js";
+import { friendlyError } from "./index.js";
 
 export interface GoogleClientLike {
   models: {
@@ -44,7 +45,7 @@ export class GoogleAdapter implements ModelAdapter {
   }
 
   async run(args: AdapterRunArgs): Promise<RunResult> {
-    const { prompt, spec, system } = args;
+    const { prompt, messages, spec, system } = args;
     const start = performance.now();
 
     try {
@@ -55,9 +56,16 @@ export class GoogleAdapter implements ModelAdapter {
       if (spec.topP !== undefined) config.topP = spec.topP;
       if (system) config.systemInstruction = system;
 
+      const contents = messages
+        ? messages.map((m) => ({
+            role: m.role === "assistant" ? "model" : "user",
+            parts: [{ text: m.content }],
+          }))
+        : prompt;
+
       const response = await this.client.models.generateContent({
         model: spec.model,
-        contents: prompt,
+        contents,
         config,
       });
 
@@ -79,7 +87,7 @@ export class GoogleAdapter implements ModelAdapter {
         usage: { inputTokens: 0, outputTokens: 0 },
         latencyMs,
         costUsd: 0,
-        error: { message: err instanceof Error ? err.message : String(err) },
+        error: { message: friendlyError(err, "google") },
       };
     }
   }

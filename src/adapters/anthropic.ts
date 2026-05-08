@@ -6,6 +6,7 @@ import type {
   Usage,
 } from "../types/index.js";
 import { computeCostUsd } from "../pricing.js";
+import { friendlyError } from "./index.js";
 
 export interface AnthropicClientLike {
   messages: {
@@ -15,7 +16,7 @@ export interface AnthropicClientLike {
       temperature?: number;
       top_p?: number;
       system?: string;
-      messages: Array<{ role: "user"; content: string }>;
+      messages: Array<{ role: "user" | "assistant"; content: string }>;
     }): Promise<{
       content: Array<{ type: string; text?: string }>;
       usage: { input_tokens: number; output_tokens: number };
@@ -36,12 +37,16 @@ export class AnthropicAdapter implements ModelAdapter {
   }
 
   async run(args: AdapterRunArgs): Promise<RunResult> {
-    const { prompt, spec, system } = args;
+    const { prompt, messages, spec, system } = args;
     const start = performance.now();
 
     // Opus 4.7 rejects `temperature`. v0.1 ships only with that default;
     // when we add older models we can route per-model.
     const acceptsTemperature = !spec.model.startsWith("claude-opus-4-7");
+
+    const apiMessages: Array<{ role: "user" | "assistant"; content: string }> = messages
+      ? messages.map((m) => ({ role: m.role, content: m.content }))
+      : [{ role: "user", content: prompt }];
 
     try {
       const response = await this.client.messages.create({
@@ -50,7 +55,7 @@ export class AnthropicAdapter implements ModelAdapter {
         ...(acceptsTemperature && spec.temperature !== undefined && { temperature: spec.temperature }),
         ...(spec.topP !== undefined && { top_p: spec.topP }),
         ...(system && { system }),
-        messages: [{ role: "user", content: prompt }],
+        messages: apiMessages,
       });
 
       const latencyMs = Math.round(performance.now() - start);
@@ -74,7 +79,7 @@ export class AnthropicAdapter implements ModelAdapter {
         usage: { inputTokens: 0, outputTokens: 0 },
         latencyMs,
         costUsd: 0,
-        error: { message: err instanceof Error ? err.message : String(err) },
+        error: { message: friendlyError(err, "anthropic") },
       };
     }
   }

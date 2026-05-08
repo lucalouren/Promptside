@@ -2,11 +2,14 @@ import chalk from "chalk";
 import Table from "cli-table3";
 import type { RenderInput, Renderer, RunResult } from "../types/index.js";
 
-const PROVIDER_COLOR = {
+const PROVIDER_COLOR: Record<string, ReturnType<typeof chalk.hex>> = {
   anthropic: chalk.hex("#D97706"),
   openai: chalk.hex("#10A37F"),
   google: chalk.hex("#4285F4"),
-} as const;
+  xai: chalk.hex("#FFFFFF"),
+  deepseek: chalk.hex("#4D6BFE"),
+  kimi: chalk.hex("#7C3AED"),
+};
 
 export class TerminalRenderer implements Renderer {
   readonly target = "terminal" as const;

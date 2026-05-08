@@ -1,4 +1,9 @@
-export type ProviderId = "anthropic" | "openai" | "google";
+export type ProviderId = "anthropic" | "openai" | "google" | "xai" | "deepseek" | "kimi";
+
+export interface Message {
+  role: "user" | "assistant";
+  content: string;
+}
 
 export interface ModelSpec {
   provider: ProviderId;
@@ -24,6 +29,7 @@ export interface RunResult {
 
 export interface AdapterRunArgs {
   prompt: string;
+  messages?: Message[];
   spec: ModelSpec;
   system?: string;
   signal?: AbortSignal;
@@ -36,6 +42,7 @@ export interface ModelAdapter {
 
 export interface RunnerOptions {
   prompt: string;
+  messages?: Message[];
   models: ModelSpec[];
   system?: string;
   concurrency?: number;
