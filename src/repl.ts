@@ -34,6 +34,7 @@ export async function startRepl(models: ModelSpec[], system?: string): Promise<v
     `${chalk.bold("promptside")} ${chalk.dim("interactive")} · ${models.map((m) => colorFor(m.provider)(`${m.provider}:${m.model}`)).join(chalk.dim(" · "))}\n`,
   );
   process.stdout.write(chalk.dim("type a prompt and press Enter · /help for commands · /quit to exit") + "\n");
+  process.stdout.write(chalk.dim("supports: claude · gpt · gemini · grok · deepseek · kimi — use -m to pick models") + "\n");
   process.stdout.write(chalk.dim("─".repeat(w)) + "\n\n");
 
   const printHelp = () => {
