@@ -24,12 +24,33 @@ export interface CliInvocation {
 
 const VERSION = "0.2.0";
 
-const DEFAULT_MODELS = [
-  "anthropic:claude-opus-4-7",
-  "openai:gpt-5",
-  "google:gemini-2.5-flash",
+const FULL_DEFAULTS = [
+  { model: "anthropic:claude-sonnet-4-5", envVar: "ANTHROPIC_API_KEY" },
+  { model: "openai:gpt-4.1", envVar: "OPENAI_API_KEY" },
+  { model: "google:gemini-2.5-flash", envVar: "GOOGLE_API_KEY" },
+  { model: "xai:grok-3-mini", envVar: "XAI_API_KEY" },
+  { model: "deepseek:deepseek-v3", envVar: "DEEPSEEK_API_KEY" },
+  { model: "kimi:kimi-k2", envVar: "KIMI_API_KEY" },
 ];
-const DEFAULT_MODELS_STRING = DEFAULT_MODELS.join(",");
+
+/**
+ * Build default model list based on which API keys are available.
+ * OpenRouter key counts as a wildcard — enables all defaults.
+ */
+function getDefaultModels(): string[] {
+  const hasOpenRouter = Boolean(process.env.OPENROUTER_API_KEY);
+  if (hasOpenRouter) {
+    return FULL_DEFAULTS.map((d) => d.model);
+  }
+  const available = FULL_DEFAULTS.filter((d) => Boolean(process.env[d.envVar]));
+  if (available.length > 0) {
+    return available.map((d) => d.model);
+  }
+  // Nothing set — return the big 3 so validateEnv can give a helpful error.
+  return ["anthropic:claude-sonnet-4-5", "openai:gpt-4.1", "google:gemini-2.5-flash"];
+}
+
+const DEFAULT_MODELS_STRING = "anthropic:claude-sonnet-4-5,openai:gpt-4.1,google:gemini-2.5-flash";
 
 interface RawCliOptions {
   models: string;
@@ -72,11 +93,11 @@ export function buildProgram(): Command {
         if (!promptArg) {
           // No prompt — launch interactive REPL.
           const opts = cmd.optsWithGlobals() as RawCliOptions;
-          const models = opts.models
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
-            .map(parseModelString);
+          const modelsExplicit = opts.models !== DEFAULT_MODELS_STRING;
+          const modelStrings = modelsExplicit
+            ? opts.models.split(",").map((s) => s.trim()).filter(Boolean)
+            : getDefaultModels();
+          const models = modelStrings.map(parseModelString);
           validateEnv(models);
           await startRepl(models);
           return;
