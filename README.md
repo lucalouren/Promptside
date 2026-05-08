@@ -1,4 +1,4 @@
-# promptside
+# Promptside
 
 > Talk to every LLM at once. Side by side, in your terminal.
 
