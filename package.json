@@ -1,6 +1,6 @@
 {
   "name": "promptside",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Run the same prompt across LLMs and see a side-by-side diff with tokens, latency, and cost",
   "license": "MIT",
   "author": "lucalouren",
