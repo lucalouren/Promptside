@@ -2,7 +2,7 @@
 
 > Talk to every LLM at once. Side by side, in your terminal.
 
-`promptside` is a multi-model chat playground for the terminal. Run the same prompt across Claude, GPT, Gemini, Grok, DeepSeek, and Kimi — or drop into an interactive REPL and have a multi-turn conversation with all of them simultaneously.
+`promptside` is a multi-model chat playground for the terminal. Run the same prompt across Claude, GPT, Gemini, Grok, DeepSeek, and Kimi, or drop into an interactive REPL and have a multi-turn conversation with all of them simultaneously.
 
 ```bash
 npx promptside
